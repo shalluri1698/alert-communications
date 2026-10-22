@@ -1,0 +1,42 @@
+{
+ "/__l5e/assets-v1/48ed80ee-4fda-47de-bc07-d6d775c22a2c/svc-ai-voice.jpg": {
+  "d": "/__l5e/assets-v1/8078a951-1cdf-4d26-9b1f-95630ebb0117/alert-ai-voice.webp",
+  "-mobile": "/__l5e/assets-v1/e5999906-ad74-4f4e-b3ec-d786578e0595/alert-ai-voice-mobile.webp"
+ },
+ "/__l5e/assets-v1/b1c10969-6d85-4fb1-83b8-20363242b328/svc-attorneys.jpg": {
+  "d": "/__l5e/assets-v1/261d121c-21ca-419e-b214-f00148444a89/alert-attorneys.webp",
+  "-mobile": "/__l5e/assets-v1/651407f4-d281-4ab4-8c58-02fe3a2e6ebb/alert-attorneys-mobile.webp"
+ },
+ "/__l5e/assets-v1/58d88118-97be-49a5-b60a-3297d962d31b/svc-callcenter.jpg": {
+  "d": "/__l5e/assets-v1/b247b9f5-ba9a-4e78-9838-9b59d733e38a/alert-callcenter.webp",
+  "-mobile": "/__l5e/assets-v1/79d2e96d-e4a3-41c7-a01f-a91608ec869a/alert-callcenter-mobile.webp"
+ },
+ "/__l5e/assets-v1/68965f2d-070b-4648-b335-afc0d87ef709/svc-handset.jpg": {
+  "d": "/__l5e/assets-v1/06082f12-3eba-441d-b862-5695a7ee2639/alert-handset.webp",
+  "-mobile": "/__l5e/assets-v1/a4ec4358-37bf-41a6-a745-908aa54995de/alert-handset-mobile.webp"
+ },
+ "/__l5e/assets-v1/862e1b2e-f1e6-44e0-8e59-921257a4c2ef/svc-headsets.jpg": {
+  "d": "/__l5e/assets-v1/c620de1b-3d8f-4fdd-8a99-e80d66065f24/alert-headsets.webp",
+  "-mobile": "/__l5e/assets-v1/8d9d46d7-e5b0-497e-a9f4-10358d022fd1/alert-headsets-mobile.webp"
+ },
+ "/__l5e/assets-v1/b7601cae-2129-40c5-8c06-32ca59a276ac/svc-night-agent.jpg": {
+  "d": "/__l5e/assets-v1/298704fe-b5af-49f1-a21c-35c727bbf589/alert-night-agent.webp",
+  "-mobile": "/__l5e/assets-v1/8ccc6d0f-f84a-4d78-a6fe-116e8d8d454e/alert-night-agent-mobile.webp"
+ },
+ "/__l5e/assets-v1/34a090a8-4201-4368-8d3a-3ebd248d4542/svc-office-desk.jpg": {
+  "d": "/__l5e/assets-v1/7ef22103-4534-4669-a6de-d3f0def38513/alert-office-desk.webp",
+  "-mobile": "/__l5e/assets-v1/8ec880bd-7605-44b8-8844-b716011325f3/alert-office-desk-mobile.webp"
+ },
+ "/__l5e/assets-v1/45bbe789-34fd-4b58-af0a-67f4058fa5e1/svc-reception.jpg": {
+  "d": "/__l5e/assets-v1/3ecdec9f-0797-45c9-8d12-52b6855b2f12/alert-reception.webp",
+  "-mobile": "/__l5e/assets-v1/84352af9-08ac-4d1b-b15a-a4984bfed052/alert-reception-mobile.webp"
+ },
+ "/__l5e/assets-v1/a674bc21-c41b-4566-9676-86694d8b4f24/svc-team-headsets.jpg": {
+  "d": "/__l5e/assets-v1/abfe5d41-a389-4306-826f-e2a662529db2/alert-team-headsets.webp",
+  "-mobile": "/__l5e/assets-v1/3f59b213-577f-4ad7-a46e-e61fd1094d50/alert-team-headsets-mobile.webp"
+ },
+ "/__l5e/assets-v1/046f9ab4-6a3f-42b5-8e2e-8ab47f086667/svc-woman-call.jpg": {
+  "d": "/__l5e/assets-v1/5eaf7800-955c-4d0c-aaa5-814040c0c615/alert-woman-call.webp",
+  "-mobile": "/__l5e/assets-v1/cba1a3c6-bc7f-44f5-acfd-9fdd38d2d4ed/alert-woman-call-mobile.webp"
+ }
+}
