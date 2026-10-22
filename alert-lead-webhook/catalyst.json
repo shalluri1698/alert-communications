@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "targets": ["lead_webhook"],
+    "ignore": [],
+    "source": "functions"
+  }
+}

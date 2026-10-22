@@ -1,0 +1,56 @@
+diff --git a/src/components/live-pages.tsx b/src/components/live-pages.tsx
+index 6731a99..4b62144 100644
+--- a/src/components/live-pages.tsx
++++ b/src/components/live-pages.tsx
+@@ -129,9 +129,10 @@ export function LiveForm({ title = true, heading }: { title?: boolean; heading?:
+ 
+ const FormConsent = () => (
+   <div className="space-y-3 pt-1 font-body text-[11px] leading-snug">
+-    <label className="flex items-start gap-1.5 italic"><input required type="checkbox" className="mt-0.5" />Accept Privacy Policy*</label>
++    <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
++    <label className="flex items-start gap-1.5 italic"><input required type="checkbox" name="privacy" className="mt-0.5" />Accept Privacy Policy*</label>
+     <p>I accept the <a href="/privacy-policy/" className="underline">Privacy Policy</a> and <a href="/data-processing-addendum/" className="underline">Data Processing Addendum</a>. *</p>
+-    <label className="flex items-start gap-1.5 italic"><input type="checkbox" className="mt-0.5" />Accept SMS Policy</label>
++    <label className="flex items-start gap-1.5 italic"><input type="checkbox" name="sms_consent" className="mt-0.5" />Accept SMS Policy</label>
+     <p>By checking this box, I consent to receive customer care, account notification, or marketing/promotional SMS messages from Alert Communications. Reply STOP to opt out; reply HELP for support or visit the respective brand <a href="/contact/" className="underline">contact page</a>. Message and data rates may apply, and messaging frequency may vary. For more information on how we protect your privacy, please review our <a href="/privacy-policy/" className="underline">Privacy Policy</a> and SMS <a href="/contract-terms-and-conditions/" className="underline">Terms &amp; Conditions</a>.</p>
+   </div>
+ );
+diff --git a/src/components/quote-form.tsx b/src/components/quote-form.tsx
+index cb8c1df..6388943 100644
+--- a/src/components/quote-form.tsx
++++ b/src/components/quote-form.tsx
+@@ -29,6 +29,7 @@ export function QuoteForm({ title = <>Get Your <span className="font-extrabold">
+             <label className={wrap}><Phone className={icon} /><input required type="tel" name="phone" placeholder="Phone *" aria-label="Phone number" className={input} /></label>
+           </div>
+           <label className={`${wrap} items-start`}><MessageSquare className={`${icon} mt-3.5`} /><textarea name="message" rows={2} placeholder="Tell us about your practice" aria-label="Tell us more" className={`${input} resize-none`} /></label>
++          <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
+           <div className="space-y-2 pt-1">
+             <label className="flex items-start gap-2 font-lato text-xs leading-snug text-muted-foreground"><input required type="checkbox" name="privacy" className="mt-0.5 accent-brand" /><span><strong className="font-semibold text-foreground">Accept Privacy Policy *</strong><br />I accept the <a href="/privacy-policy/" className="underline hover:text-brand">Privacy Policy</a> and <a href="/data-processing-addendum/" className="underline hover:text-brand">Data Processing Addendum</a>.</span></label>
+             <label className="flex items-start gap-2 font-lato text-[11px] leading-snug text-muted-foreground"><input type="checkbox" name="sms_consent" className="mt-0.5 accent-brand" /><span><strong className="text-xs font-semibold text-foreground">Accept SMS Policy</strong><br />By checking this box, I consent to receive customer care, account notification, or marketing/promotional SMS messages from Alert Communications. Reply STOP to opt out; Reply HELP for support or visit the respective brand <a href="/contact/" className="underline hover:text-brand">contact page</a>. Message and data rates may apply, and messaging frequency may vary. For more information on how we protect your privacy, please review our <a href="/privacy-policy/" className="underline hover:text-brand">Privacy Policy</a> and SMS <a href="/contract-terms-and-conditions/" className="underline hover:text-brand">Terms &amp; Conditions</a>.</span></label>
+diff --git a/src/lib/lead.functions.ts b/src/lib/lead.functions.ts
+index b06004b..e23c270 100644
+--- a/src/lib/lead.functions.ts
++++ b/src/lib/lead.functions.ts
+@@ -18,7 +18,7 @@ export const submitLead = createServerFn({ method: "POST" })
+       return { ok: true, delivered: false };
+     }
+     try {
+-      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
++      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json", "X-Lead-Secret": process.env["LEAD_WEBHOOK_SECRET"] ?? "" }, body: JSON.stringify(payload) });
+       if (!res.ok) console.error("[lead] webhook failed", res.status, await res.text());
+       return { ok: true, delivered: res.ok };
+     } catch (e) {
+diff --git a/src/lib/send-lead.ts b/src/lib/send-lead.ts
+index 5220bab..cb07814 100644
+--- a/src/lib/send-lead.ts
++++ b/src/lib/send-lead.ts
+@@ -5,7 +5,8 @@ import { gaEvent } from "./analytics";
+ /** Collects form fields, attaches attribution, sends to the webhook. Never blocks the thank-you screen. */
+ export async function sendLead(formEl: HTMLFormElement, form: string) {
+   const fields: Record<string, string> = {};
+-  new FormData(formEl).forEach((v, k) => { if (typeof v === "string") fields[k] = v; });
++  // Join repeated names (e.g. several checked "inquiry_type" boxes) instead of keeping only the last one.
++  new FormData(formEl).forEach((v, k) => { if (typeof v === "string") fields[k] = fields[k] ? `${fields[k]}; ${v}` : v; });
+   try {
+     await submitLead({ data: { form, fields, attribution: getAttribution() as Record<string, unknown> } });
+   } catch (e) {

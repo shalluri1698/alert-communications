@@ -1,0 +1,22 @@
+{
+  "deployment": {
+    "name": "lead_webhook",
+    "stack": "node20",
+    "type": "advancedio",
+    "env_variables": {
+      "ZOHO_CLIENT_ID": "",
+      "ZOHO_CLIENT_SECRET": "",
+      "ZOHO_REFRESH_TOKEN": "",
+      "ZOHO_ACCOUNTS_URL": "https://accounts.zoho.com",
+      "ZOHO_API_URL": "https://www.zohoapis.com",
+      "LEAD_SECRET": "",
+      "LEAD_SOURCE": "Website",
+      "ZOHO_TRACKING_FIELDS": "",
+      "ADMIN_KEY": "",
+      "DATASTORE_TABLE": "WebLeads"
+    }
+  },
+  "execution": {
+    "main": "index.js"
+  }
+}
