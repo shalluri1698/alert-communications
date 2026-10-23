@@ -1,7 +1,7 @@
 import { SITE_URL, abs } from "@/lib/site";
 import { graph, pageNode } from "@/lib/schema";
 import { useEffect, useRef, useState } from "react";
-import { sendLead } from "@/lib/send-lead";
+import { useLeadForm } from "@/lib/use-lead-form";
 import { YouTube } from "@/components/youtube";
 import { ChevronRight, CheckCircle2, ArrowRightCircle, MapPin, Star, Smile, DoorOpen, Facebook, Linkedin, Twitter, ChevronDown, ArrowRight } from "lucide-react";
 import { Header, Footer, MobileCallBar } from "@/components/home/sections";
@@ -106,7 +106,7 @@ export const Textured = ({ children, className = "" }: { children: React.ReactNo
 );
 
 export function LiveForm({ title = true, heading }: { title?: boolean; heading?: string }) {
-  const [sent, setSent] = useState(false);
+  const { sent, pending, error, onSubmit } = useLeadForm("live_form");
   const lbl = "block font-body text-[14px] font-bold";
   const inp = "mt-1 w-full border border-ink/40 bg-background px-2 py-1.5 text-[14px] text-foreground outline-none focus:border-ink";
   return (
@@ -114,13 +114,14 @@ export function LiveForm({ title = true, heading }: { title?: boolean; heading?:
       {heading && <h2 className="text-center font-display text-[32px] font-bold uppercase leading-[1.1]">{heading}</h2>}
       {title && !heading && <h2 className="text-center font-display text-[32px] font-light uppercase leading-[1.1]">Get Your<br /><span className="font-bold">Personalized</span><br />Quote</h2>}
       {sent ? <p className="mt-10 text-center font-display text-xl font-bold">Thank you! Your request has been received.</p> : (
-        <form className="mt-8 space-y-3" onSubmit={(e) => { e.preventDefault(); void sendLead(e.currentTarget, "live_form"); setSent(true); }}>
+        <form className="mt-8 space-y-3" onSubmit={onSubmit} aria-busy={pending}>
           {[["Full name", "text", "name"], ["Email address", "email", "email"], ["Company", "text", "company"], ["Phone Number", "tel", "phone"]].map(([l, t, n]) => (
             <label key={n} className={lbl}>{l} <span className="text-brand-foreground/70">*</span><input required type={t} name={n} className={inp} /></label>
           ))}
           <label className={lbl}>Tell us more<input name="message" className={inp} /></label>
           <FormConsent />
-          <button className="mt-2 w-full bg-ink py-2.5 font-body text-[15px] uppercase text-ink-foreground hover:bg-ink/85">Submit Request</button>
+          {error && <p role="alert" className="text-sm md:col-span-full">{error}</p>}
+          <button disabled={pending} className="mt-2 w-full bg-ink py-2.5 font-body text-[15px] uppercase text-ink-foreground hover:bg-ink/85">Submit Request</button>
         </form>
       )}
     </div>
@@ -129,9 +130,10 @@ export function LiveForm({ title = true, heading }: { title?: boolean; heading?:
 
 const FormConsent = () => (
   <div className="space-y-3 pt-1 font-body text-[11px] leading-snug">
-    <label className="flex items-start gap-1.5 italic"><input required type="checkbox" className="mt-0.5" />Accept Privacy Policy*</label>
+    <input hidden type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ display: "none" }} />
+    <label className="flex items-start gap-1.5 italic"><input required type="checkbox" name="privacy" className="mt-0.5" />Accept Privacy Policy*</label>
     <p>I accept the <a href="/privacy-policy/" className="underline">Privacy Policy</a> and <a href="/data-processing-addendum/" className="underline">Data Processing Addendum</a>. *</p>
-    <label className="flex items-start gap-1.5 italic"><input type="checkbox" className="mt-0.5" />Accept SMS Policy</label>
+    <label className="flex items-start gap-1.5 italic"><input type="checkbox" name="sms_consent" className="mt-0.5" />Accept SMS Policy</label>
     <p>By checking this box, I consent to receive customer care, account notification, or marketing/promotional SMS messages from Alert Communications. Reply STOP to opt out; reply HELP for support or visit the respective brand <a href="/contact/" className="underline">contact page</a>. Message and data rates may apply, and messaging frequency may vary. For more information on how we protect your privacy, please review our <a href="/privacy-policy/" className="underline">Privacy Policy</a> and SMS <a href="/contract-terms-and-conditions/" className="underline">Terms &amp; Conditions</a>.</p>
   </div>
 );
@@ -624,7 +626,7 @@ export function LiveCaseStudies() {
 
 /* ---------- 12. Client Support ---------- */
 export function LiveClientSupport() {
-  const [sent, setSent] = useState(false);
+  const { sent, pending, error, onSubmit } = useLeadForm("client_support");
   const inp = "mt-1 w-full border border-ink/40 bg-background px-2 py-1 text-[14px] text-foreground outline-none";
   return (
     <Shell>
@@ -644,13 +646,14 @@ export function LiveClientSupport() {
           </div>
           <div className="rounded-[10px] bg-muted-foreground p-5 text-ink-foreground">
             {sent ? <p className="py-20 text-center font-display text-xl font-bold">Thank you! Your request has been received.</p> : (
-              <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); void sendLead(e.currentTarget, "client_support"); setSent(true); }}>
+              <form className="space-y-3" onSubmit={onSubmit} aria-busy={pending}>
                 {[["Full name", "text", "name"], ["Email address", "email", "email"], ["Company", "text", "company"], ["Phone Number", "tel", "phone"]].map(([l, t, n]) => (
                   <label key={n} className="block font-body text-[14px] font-bold">{l} <span className="text-brand">*</span><input required type={t} name={n} className={inp} /></label>
                 ))}
                 <label className="block font-body text-[14px] font-bold">Tell us more<input name="message" className={inp} /></label>
                 <FormConsent />
-                <button className="w-full bg-ink py-2.5 font-body text-[15px] uppercase text-ink-foreground">Submit Request</button>
+                {error && <p role="alert" className="text-sm md:col-span-full">{error}</p>}
+                <button disabled={pending} className="w-full bg-ink py-2.5 font-body text-[15px] uppercase text-ink-foreground">Submit Request</button>
               </form>
             )}
           </div>
@@ -677,7 +680,7 @@ export function LiveLegal({ title, html }: { title: string; html: string }) {
 
 /* ---------- CCPA Information Request ---------- */
 export function LiveCCPA() {
-  const [sent, setSent] = useState(false);
+  const { sent, pending, error, onSubmit } = useLeadForm("ccpa_request");
   const inp = "mt-1 w-full border border-ink/40 bg-background px-2 py-1.5 text-[14px] text-foreground outline-none";
   const lab = "block font-body text-[14px] font-bold";
   const req = <span className="text-brand">*</span>;
@@ -688,7 +691,7 @@ export function LiveCCPA() {
         <Box className="mx-auto max-w-[900px]">
           <div className="rounded-[10px] bg-muted-foreground p-6 text-ink-foreground">
             {sent ? <p className="py-20 text-center font-display text-xl font-bold">Thank you! Your request has been received.</p> : (
-              <form className="grid gap-4 md:grid-cols-2" onSubmit={(e) => { e.preventDefault(); void sendLead(e.currentTarget, "ccpa_request"); setSent(true); }}>
+              <form className="grid gap-4 md:grid-cols-2" onSubmit={onSubmit} aria-busy={pending}>
                 <label className={lab}>Date {req}<input required type="date" name="date" className={inp} /></label>
                 <div />
                 {[["First Name", "text", "first_name"], ["Last Name", "text", "last_name"], ["Phone Number", "tel", "phone"], ["Your Email", "email", "email"], ["Confirm Email", "email", "email_confirm"]].map(([l, t, n]) => (
@@ -709,7 +712,8 @@ export function LiveCCPA() {
                 <div />
                 <label className={`${lab} md:col-span-2`}>Type Your Message Here<textarea name="message" rows={4} className={inp} /></label>
                 <div className="md:col-span-2"><FormConsent /></div>
-                <button className="w-full bg-ink py-2.5 font-body text-[15px] uppercase text-ink-foreground md:col-span-2">Submit</button>
+                {error && <p role="alert" className="text-sm md:col-span-full">{error}</p>}
+                <button disabled={pending} className="w-full bg-ink py-2.5 font-body text-[15px] uppercase text-ink-foreground md:col-span-2">Submit</button>
               </form>
             )}
           </div>
