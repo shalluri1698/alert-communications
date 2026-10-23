@@ -15,7 +15,8 @@ export async function sendLead(formEl: HTMLFormElement, form: string) {
     signal: AbortSignal.timeout(45000),
   });
   const result = await response.json().catch(() => null);
-  if (!response.ok || result?.ok !== true) throw new Error("Submission could not be saved");
+  const accepted = result?.success === true || result?.ok === true;
+  if (!response.ok || !accepted) throw new Error("Submission could not be saved");
   const w = window as unknown as { dataLayer?: unknown[]; fbq?: (...a: unknown[]) => void };
   // Analytics failures must not turn an accepted submission into a failed form.
   try {

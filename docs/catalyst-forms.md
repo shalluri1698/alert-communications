@@ -43,13 +43,13 @@ Fields are strings. Unchecked checkboxes are omitted. Repeated field names are j
 
 ## Required response and browser access
 
-Return HTTP 200 (or another successful 2xx status) with JSON:
+Return a successful 2xx status (including HTTP 201) with JSON:
 
 ```json
-{ "ok": true }
+{ "success": true }
 ```
 
-Only return this after accepting the submission. Additional response fields are ignored. Non-2xx responses, invalid JSON, `{ "ok": false }`, timeouts and network errors preserve the form and display a retry message. A plain-text starter response or `{ "status": "ok" }` alone will not trigger success. Conversion analytics fire only after acceptance.
+Only return this after accepting the submission. The website also accepts the earlier `{ "ok": true }` format. Additional response fields are ignored. Non-2xx responses, invalid JSON, responses without either success flag set to true, timeouts and network errors preserve the form and display a retry message. A plain-text starter response or `{ "status": "ok" }` alone will not trigger success. Conversion analytics fire only after acceptance.
 
 Because the site calls Catalyst directly, your function/platform must handle browser CORS preflight (`OPTIONS`) and return matching headers on POST responses, including errors:
 
@@ -64,6 +64,6 @@ Allow each actual website or preview origin explicitly in your Catalyst configur
 
 ## Verification status
 
-The website production build and TypeScript checks pass. Read-only endpoint checks on October 23, 2026 returned `I am Live and Ready.` for GET and no CORS allow-origin header for OPTIONS. Live lead delivery remains pending your Catalyst implementation. No Catalyst functions or CRM settings were created or modified by this work.
+The user reported a successful submission from the Zoho landing-page test on October 23, 2026: HTTP 201 with `success: true`, `status: "Created"`, and lead/submission IDs. The website response check now accepts that format. This confirms the reported test's backend acceptance; CRM field mapping has not been independently audited. No Catalyst functions or CRM settings were created or modified by this work.
 
 When moving to WordPress later, its forms can post the same JSON to this endpoint; update the allowed origin if the domain changes.
