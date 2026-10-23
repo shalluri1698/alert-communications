@@ -39,6 +39,7 @@ import { Route as ServiceAreaIndexRouteImport } from './routes/service-area.inde
 import { Route as ServiceAreaStateRouteImport } from './routes/service-area.$state'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
+import { Route as ApiFormsSubmitRouteImport } from './routes/api/forms/submit'
 import { Route as ApiPublicRedirectAiRouteImport } from './routes/api/public/redirect-ai'
 
 const IndexRoute = IndexRouteImport.update({
@@ -192,6 +193,11 @@ const ServicesSlugRoute = ServicesSlugRouteImport.update({
   path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiFormsSubmitRoute = ApiFormsSubmitRouteImport.update({
+  id: '/api/forms/submit',
+  path: '/api/forms/submit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicRedirectAiRoute = ApiPublicRedirectAiRouteImport.update({
   id: '/api/public/redirect-ai',
   path: '/api/public/redirect-ai',
@@ -229,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/service-area/': typeof ServiceAreaIndexRoute
   '/services/': typeof ServicesIndexRoute
+  '/api/forms/submit': typeof ApiFormsSubmitRoute
   '/api/public/redirect-ai': typeof ApiPublicRedirectAiRoute
 }
 export interface FileRoutesByTo {
@@ -262,6 +269,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/service-area': typeof ServiceAreaIndexRoute
   '/services': typeof ServicesIndexRoute
+  '/api/forms/submit': typeof ApiFormsSubmitRoute
   '/api/public/redirect-ai': typeof ApiPublicRedirectAiRoute
 }
 export interface FileRoutesById {
@@ -296,6 +304,7 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/service-area/': typeof ServiceAreaIndexRoute
   '/services/': typeof ServicesIndexRoute
+  '/api/forms/submit': typeof ApiFormsSubmitRoute
   '/api/public/redirect-ai': typeof ApiPublicRedirectAiRoute
 }
 export interface FileRouteTypes {
@@ -331,6 +340,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/service-area/'
     | '/services/'
+    | '/api/forms/submit'
     | '/api/public/redirect-ai'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -364,6 +374,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/service-area'
     | '/services'
+    | '/api/forms/submit'
     | '/api/public/redirect-ai'
   id:
     | '__root__'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/service-area/'
     | '/services/'
+    | '/api/forms/submit'
     | '/api/public/redirect-ai'
   fileRoutesById: FileRoutesById
 }
@@ -431,6 +443,7 @@ export interface RootRouteChildren {
   BlogIndexRoute: typeof BlogIndexRoute
   ServiceAreaIndexRoute: typeof ServiceAreaIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
+  ApiFormsSubmitRoute: typeof ApiFormsSubmitRoute
   ApiPublicRedirectAiRoute: typeof ApiPublicRedirectAiRoute
 }
 
@@ -646,6 +659,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/forms/submit': {
+      id: '/api/forms/submit'
+      path: '/api/forms/submit'
+      fullPath: '/api/forms/submit'
+      preLoaderRoute: typeof ApiFormsSubmitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/redirect-ai': {
       id: '/api/public/redirect-ai'
       path: '/api/public/redirect-ai'
@@ -687,6 +707,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogIndexRoute: BlogIndexRoute,
   ServiceAreaIndexRoute: ServiceAreaIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
+  ApiFormsSubmitRoute: ApiFormsSubmitRoute,
   ApiPublicRedirectAiRoute: ApiPublicRedirectAiRoute,
 }
 export const routeTree = rootRouteImport

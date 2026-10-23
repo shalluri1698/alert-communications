@@ -5,9 +5,7 @@ import { gaEvent } from "./analytics";
 export async function sendLead(formEl: HTMLFormElement, form: string) {
   const fields: Record<string, string> = {};
   new FormData(formEl).forEach((v, k) => { if (typeof v === "string") fields[k] = fields[k] ? `${fields[k]}; ${v}` : v; });
-  const url = import.meta.env["VITE_CATALYST_FORM_URL"] ||
-    "https://lead-form-management-918580965.development.catalystserverless.com/server/Alert_Lead_Management/";
-  const response = await fetch(url, {
+  const response = await fetch("/api/forms/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ form, fields, attribution: getAttribution() }),

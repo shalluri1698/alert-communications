@@ -1,10 +1,23 @@
 # Website form endpoint
 
-All four existing website form types submit directly to:
+Browser -> same-origin `POST /api/forms/submit` -> Catalyst Alert_Lead_Management -> CRM
+
+All four forms now call the website backend. The browser never contacts Catalyst, so Catalyst does not need a website-domain CORS whitelist for this path. The server forwards the same JSON structure, preserving consent, repeated CCPA fields and attribution. No Catalyst configuration was changed by this update.
+
+The server defaults to:
 
 https://lead-form-management-918580965.development.catalystserverless.com/server/Alert_Lead_Management/
 
-The URL is the default in `src/lib/send-lead.ts`; no environment variable is required. `VITE_CATALYST_FORM_URL` can override it for another environment. The browser sends no API key, cookies or authentication header. You manage the Catalyst function and CRM integration separately.
+Optional server configuration:
+
+```env
+CATALYST_FORM_URL=https://lead-form-management-918580965.development.catalystserverless.com/server/Alert_Lead_Management/
+CATALYST_FORM_API_KEY=
+```
+
+The optional key is sent as `X-API-Key` only if configured; the current integration does not require adding a key unless you enable matching validation in Catalyst. Keep it on the website server and out of browser code. The old public `VITE_CATALYST_FORM_URL` value is no longer used. CRM/OAuth credentials stay in Catalyst.
+
+The route runs in the existing TanStack server runtime. It requires server-capable hosting; a static-only website export cannot run this endpoint. No Google Cloud service is required.
 
 ## Request
 
@@ -51,19 +64,14 @@ Return a successful 2xx status (including HTTP 201) with JSON:
 
 Only return this after accepting the submission. The website also accepts the earlier `{ "ok": true }` format. Additional response fields are ignored. Non-2xx responses, invalid JSON, responses without either success flag set to true, timeouts and network errors preserve the form and display a retry message. A plain-text starter response or `{ "status": "ok" }` alone will not trigger success. Conversion analytics fire only after acceptance.
 
-Because the site calls Catalyst directly, your function/platform must handle browser CORS preflight (`OPTIONS`) and return matching headers on POST responses, including errors:
+## Same-origin protection
 
-```http
-Access-Control-Allow-Origin: https://www.alertcommunications.com
-Access-Control-Allow-Methods: POST, OPTIONS
-Access-Control-Allow-Headers: Content-Type
-Vary: Origin
-```
-
-Allow each actual website or preview origin explicitly in your Catalyst configuration. Keep all CRM/OAuth credentials in Catalyst.
+The website endpoint accepts JSON, limits the body to 64 KiB, validates required form fields/privacy acceptance and CCPA email confirmation, and rejects browser requests from a different origin. It forwards server-side without copying the browser's Origin or cookies to Catalyst. A failed or unconfirmed upstream response leaves the form available for retry. No automatic retries are performed, to avoid duplicating created leads.
 
 ## Verification status
 
 The user reported a successful submission from the Zoho landing-page test on October 23, 2026: HTTP 201 with `success: true`, `status: "Created"`, and lead/submission IDs. The website response check now accepts that format. This confirms the reported test's backend acceptance; CRM field mapping has not been independently audited. No Catalyst functions or CRM settings were created or modified by this work.
 
-When moving to WordPress later, its forms can post the same JSON to this endpoint; update the allowed origin if the domain changes.
+## Future WordPress hosting
+
+This backend belongs to the React/TanStack app; it is not PHP. For WordPress, implement a same-origin WordPress REST endpoint that forwards the same payload to Catalyst using `wp_remote_post`, then point the WordPress form at that route. Any optional key belongs in WordPress server configuration. A Custom HTML block that still fetches Catalyst directly continues to require CORS; this repository update does not change the separately pasted landing-page snippet.
